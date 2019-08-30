@@ -6,47 +6,113 @@ using namespace std;
 
 class BST
 {
-  struct node
+  struct node   //wezel BST, zawiera klucz, wskaznik do lewego i prawego syna
   {
-    node * left, * right;
+    node * left;
+    node * right;
     int key;
   };
 
-  node* root;
+  node* root;   //wskanik do glownego korzenia
 
-  node* insert(int z, node* t)
+  node* treeInsert(node* t, int z)//root, z
   {
-      if(t == NULL)
+      if(t == NULL)     //jezeli nie ma BST korzenia to wezel staje sie korzeniem
       {
         t = new node;
         t -> key = z;
-        t -> left = t -> right = NULL;
+        t -> left = NULL;
+        t -> right = NULL;
       }
 
-      else if ( z < t->key)
+      else if ( z < t->key)     //element od kluczu mniejszym od wezla dodawany jest do lewego poddrzewa
       {
-        t-> left = insert(z, t->left);
+        t-> left = treeInsert(t->left, z);
       }
 
-      else
+      else  //element od kluczu wiekszym od wezla dodawany jest do prawego poddrzewa
       {
-        t-> right = insert(z, t-> right);
+        t-> right = treeInsert(t-> right, z);
       }
 
       return t;
   }
 
 
+  node* inorderTreeWalk(node*t)
+    {
+        if(t != NULL)
+        {
+            inorderTreeWalk(t-> left);
+            cout<<t->key<<endl;
+            inorderTreeWalk(t->right);
+        }
+    }
+
+
+    node* treeSearch(node*t, int k)
+    {
+        if(t == NULL)
+            return 0;
+
+        while (t != NULL && k != t->key)
+        {
+            if(k < t->key){
+                t = t-> left;
+                }
+
+            else {
+                t= t-> right;
+                }
+        }
+        return t;
+    }
+
+  node* treeMinimum(node*t)
+  {
+    while (t-> left !=NULL)
+    {
+         t = t-> left;
+    }
+    return t;
+  }
+
+  node* treeMaximum(node*t)
+  {
+    while (t-> right !=NULL)
+    {
+    t = t-> right;
+    }
+    return t;
+  }
+
+
   public:
       BST()
       {
-          root = NULL;
+        root = NULL;  //konstruktor upewnia sie, ze przy tworzeniu BST jest puste
       }
 
-      void insert(int x)
+      void treeInsert(int z)
       {
-          root = insert(x, root);
+        root = treeInsert(root, z);
       }
+
+
+      void inorderTreeWalk()
+        {
+        inorderTreeWalk(root);
+        }
+
+
+      void treeMinimum()
+      {
+        cout<< treeMinimum(root);
+      }
+
+      void treeSearch(int k){
+        cout<< treeSearch(root, k);
+        }
 
 
   };
@@ -55,9 +121,11 @@ class BST
   int main()
   {
     BST t;
-    t.insert(2);
-    t.insert(4);
-    t.insert(11);
-    t.insert(7);
-
+    t.treeInsert(7);
+    t.treeInsert(4);
+    t.treeInsert(11);
+    t.treeInsert(2);
+    t.treeMinimum();
+    t.treeSearch(4);
+    t.inorderTreeWalk();
   }
