@@ -10,6 +10,7 @@ class BST
   {
     node * left;
     node * right;
+    node * parent;
     int key;
   };
 
@@ -23,23 +24,31 @@ class BST
         t -> key = z;
         t -> left = NULL;
         t -> right = NULL;
+        t -> parent = NULL;
       }
 
       else if ( z < t->key)     //element od kluczu mniejszym od wezla dodawany jest do lewego poddrzewa
       {
+        t -> parent = t;
         t-> left = treeInsert(t->left, z);
       }
 
       else  //element od kluczu wiekszym od wezla dodawany jest do prawego poddrzewa
       {
+        t -> parent = t;
         t-> right = treeInsert(t-> right, z);
       }
 
       return t;
   }
 
+  node * transplant (node*t, int u, int v){   //procedura wstawiania poddrzewa o korzeniu v w miejsce poddrzewa o korzeniu u
 
-  node* inorderTreeWalk(node*t)
+  }
+
+
+
+  void inorderTreeWalk(node*t)    //przechodzenie drzewa metoda in order
     {
         if(t != NULL)
         {
@@ -53,17 +62,17 @@ class BST
     node* treeSearch(node*t, int k)
     {
         if(t == NULL)
-            return 0;
+            return NULL;
 
         while (t != NULL && k != t->key)
         {
-            if(k < t->key){
-                t = t-> left;
-                }
+              if(k < t->key) {
+                  t = t-> left;
+                  }
 
-            else {
-                t= t-> right;
-                }
+              else {
+                  t= t-> right;
+                  }
         }
         return t;
     }
@@ -81,7 +90,7 @@ class BST
   {
     while (t-> right !=NULL)
     {
-    t = t-> right;
+        t = t-> right;
     }
     return t;
   }
@@ -105,10 +114,6 @@ class BST
         }
 
 
-      void treeMinimum()
-      {
-        cout<< treeMinimum(root);
-      }
 
       void treeSearch(int k){
         cout<< treeSearch(root, k);
@@ -124,8 +129,8 @@ class BST
     t.treeInsert(7);
     t.treeInsert(4);
     t.treeInsert(11);
-    t.treeInsert(2);
-    t.treeMinimum();
-    t.treeSearch(4);
+    t.treeInsert(-1);
+    t.treeInsert(5);
     t.inorderTreeWalk();
+    t.treeSearch(33);
   }
