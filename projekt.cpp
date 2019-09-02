@@ -14,11 +14,12 @@ class BST
     int key;
   };
 
-  node* root;   //wskanik do glownego korzenia
+  node* root;
 
   node* treeInsert(node* t, int z)//root, z
   {
-      if(t == NULL)     //jezeli nie ma BST korzenia to wezel staje sie korzeniem
+
+        if(t ==NULL)     //jezeli nie ma BST korzenia to wezel staje sie korzeniem
       {
         t = new node;
         t -> key = z;
@@ -29,31 +30,64 @@ class BST
 
       else if ( z < t->key)     //element od kluczu mniejszym od wezla dodawany jest do lewego poddrzewa
       {
-        t -> parent = t;
-        t-> left = treeInsert(t->left, z);
+        node* lchild = treeInsert(t->left, z);
+        t-> left = lchild;
+        lchild -> parent = t;
       }
 
       else  //element od kluczu wiekszym od wezla dodawany jest do prawego poddrzewa
       {
-        t -> parent = t;
-        t-> right = treeInsert(t-> right, z);
+        node* rchild = treeInsert(t-> right, z);
+        t-> right = rchild;
+        rchild -> parent =t;
       }
-
       return t;
   }
 
-  node * transplant (node*t, int u, int v){   //procedura wstawiania poddrzewa o korzeniu v w miejsce poddrzewa o korzeniu u
-
+  node * transplant (node*t, node* u, node* v){  //procedura wstawiania poddrzewa o korzeniu v w miejsce poddrzewa o korzeniu u
+      if( u-> parent == NULL){
+          t = v;
+      }
+      else if( u-> parent -> left == u){
+          u-> left = v;
+      }
+      else {
+          u -> right =v;
+      }
+      if (v != NULL){
+        v->parent = u-> parent;
+      }
   }
 
+  node * treeDelete(node*t, node*z){
+        if( z->left == NULL){
+            transplant(t, z, z->right);
+        }
+        else if (z-> right == NULL){
+            transplant(t, z, z-> left);
+        }
+        else {
+            node*y = treeMinimum(z->right);
+            if (y-> parent != z){
+                  transplant(t, y, y-> right);
+                  y-> right = z->right;
+                  y-> right ->parent = y;
+            }
+            transplant(t, z, y);
+            y-> left = z-> left;
+            y-> left-> parent =y;
+        }
+        return t;
 
+
+    }
 
   void inorderTreeWalk(node*t)    //przechodzenie drzewa metoda in order
     {
         if(t != NULL)
         {
             inorderTreeWalk(t-> left);
-            cout<<t->key<<endl;
+            cout<<t->key<<endl;//<<" "<< t-> parent <<endl;
             inorderTreeWalk(t->right);
         }
     }
@@ -102,7 +136,7 @@ class BST
         root = NULL;  //konstruktor upewnia sie, ze przy tworzeniu BST jest puste
       }
 
-      void treeInsert(int z)
+      void tinsert(int z)
       {
         root = treeInsert(root, z);
       }
@@ -115,10 +149,14 @@ class BST
 
 
 
-      void treeSearch(int k){
-        cout<< treeSearch(root, k);
+      void tsearch(int k){
+          root= treeSearch(root, k);
+          cout<<root;
         }
 
+    /*  void tdelete(int z){
+        root =  treeDelete(root, z);
+      }*/
 
   };
 
@@ -126,11 +164,13 @@ class BST
   int main()
   {
     BST t;
-    t.treeInsert(7);
-    t.treeInsert(4);
-    t.treeInsert(11);
-    t.treeInsert(-1);
-    t.treeInsert(5);
+    t.tinsert(7);
+    t.tinsert(4);
+    t.tinsert(11);
+    t.tinsert(-1);
+    t.tinsert(5);
     t.inorderTreeWalk();
-    t.treeSearch(33);
+    t.tsearch(-1);
+  //  t.tdelete(-1);
+  //  t.inorderTreeWalk();
   }
